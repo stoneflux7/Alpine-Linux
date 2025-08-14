@@ -18,7 +18,7 @@ Password **stoneflux**
 ```
 
 ```bash
-  docker build -t stoneflux . && docker run -dit --name stoneflux -p 2222:22 stoneflux && ssh stoneflux@localhost -p 2222 && ssh root@localhost -p 2222
+  docker build -t stoneflux . && docker run -dit --name stoneflux -p 2222:22 stoneflux && ssh stoneflux@host -p 2222 && ssh root@stoneflux -p 2222
 ```
 ## Authors
 
