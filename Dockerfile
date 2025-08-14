@@ -1,20 +1,27 @@
-# Use Alpine Linux as base image
 FROM alpine:latest
 
-# Install necessary packages
-RUN apk update && apk add --no-cache bash curl openssh shadow
+# Install openssh, bash, shadow (for user management), and curl
+RUN apk update && apk add --no-cache openssh bash shadow curl
 
-# Create user 'stoneflux' and set password
-RUN useradd -m stoneflux && echo "stoneflux:stoneflux" | chpasswd
+# Set root password (optional, you can skip this if you only want stoneflux user)
+RUN echo "root:stoneflux" | chpasswd
 
-# Allow stoneflux to use bash
+# Create user stoneflux and set password
+RUN adduser -D stoneflux && echo "stoneflux:stoneflux" | chpasswd
+
+# Allow stoneflux user to use bash shell
 RUN chsh -s /bin/bash stoneflux
 
-# Set working directory
-WORKDIR /home/stoneflux
+# Setup SSH server configuration (allow password login)
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-# Switch to user
-USER stoneflux
+# Create SSH host keys
+RUN ssh-keygen -A
 
-# Launch bash as default
-CMD ["/bin/bash"]
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH daemon and keep container running
+CMD ["/usr/sbin/sshd", "-D"]
+
