@@ -1,7 +1,7 @@
 
 # Alpine Linux
 
-**Support All The Command Of The Apline Linux**
+**Support All The Command Of The Alpine Linux**
 
 **Ipv4 Support And Ssh Server**
 
